@@ -5,7 +5,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.replication.ReplicationAdmin;
-import org.apache.hadoop.hbase.replication.BaseReplicationEndpoint;
+import org.apache.hadoop.hbase.replication.ReplicationEndpoint;
 import org.apache.hadoop.hbase.replication.ReplicationException;
 import org.apache.hadoop.hbase.replication.ReplicationPeerConfig;
 import org.apache.hadoop.hbase.zookeeper.ZKUtil;
@@ -27,7 +27,7 @@ public class AddCustomReplicationEndpoint {
   public static void addPeer(
       Configuration conf,
       String peerName,
-      Class<? extends BaseReplicationEndpoint> clazz,
+      Class<? extends ReplicationEndpoint> clazz,
       Map<TableName, List<String>> tableCfs
   ) throws IOException, ReplicationException {
     /*
@@ -52,7 +52,7 @@ public class AddCustomReplicationEndpoint {
         .withArgName("peer-name")
         .isRequired()
         .withDescription("HBase peer id")
-        .create();
+        .create("p");
 
     Option classNameOption = OptionBuilder
         .withLongOpt("class-name")
@@ -62,7 +62,7 @@ public class AddCustomReplicationEndpoint {
         .withDescription(
             "Class name for custom replication endpoint. The class must be " +
                 "on the classpath and must extend BaseReplicationEndpoint")
-        .create();
+        .create("c");
 
     Options options = new Options();
     options.addOption(peerNameOption);
@@ -84,17 +84,10 @@ public class AddCustomReplicationEndpoint {
     String peerName = cmd.getOptionValue("p");
     String className = cmd.getOptionValue("c");
 
-    Class<?> clazz = Class.forName(className);
-    if (!clazz.isInstance(BaseReplicationEndpoint.class)) {
-      throw new IllegalArgumentException(
-          "Class: " + className + " does not extend BaseReplicationEndpoint"
-      );
-    }
-
     addPeer(
         conf,
         peerName,
-        clazz.asSubclass(BaseReplicationEndpoint.class),
+        Class.forName(className).asSubclass(ReplicationEndpoint.class),
         null // TODO handle passing tableCfs
     );
   }
