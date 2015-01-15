@@ -74,8 +74,18 @@ public class AddCustomReplicationEndpointUtility {
     String className = cmd.getOptionValue("c");
 
     Class<?> clazz = Class.forName(className);
-    if (clazz.isInstance(BaseReplicationEndpoint.class)) {
-      addPeer(conf, peerName, clazz.asSubclass(BaseReplicationEndpoint.class), null);
+    if (!clazz.isInstance(BaseReplicationEndpoint.class)) {
+      throw new IllegalArgumentException(
+          "Class: " + className + " does not extend BaseReplicationEndpoint"
+      );
     }
+
+    // TODO handle passing tableCfs
+    addPeer(
+        conf,
+        peerName,
+        clazz.asSubclass(BaseReplicationEndpoint.class),
+        null
+    );
   }
 }
