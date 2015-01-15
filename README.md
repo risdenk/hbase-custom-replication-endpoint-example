@@ -17,7 +17,7 @@ HBase 0.98.9 added the ability to create custom replication endpoints. This is a
 Currently not supported.
 
 ### Java
-```
+```java
 try(ReplicationAdmin replicationAdmin = new ReplicationAdmin(utility.getConfiguration())) {
     ReplicationPeerConfig peerConfig = new ReplicationPeerConfig()
           .setClusterKey(ZKUtil.getZooKeeperClusterKey(utility.getConfiguration()))
