@@ -1,4 +1,4 @@
-# hbase-custom-replication-endpoint-example
+# HBase Custom Replication Endpoint Example
 ## Overview
 HBase 0.98.9 added the ability to create custom replication endpoints. This is an example about how to create and use a custom replication endpoint.
 
