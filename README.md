@@ -12,6 +12,26 @@ HBase 0.98.9 added the ability to create custom replication endpoints. This is a
 ### Unit Tests
 1. `mvn clean test`
 
+## Adding a Custom Replication Endpoint
+### HBase Shell
+Currently not supported.
+
+### Java
+```
+try(ReplicationAdmin replicationAdmin = new ReplicationAdmin(utility.getConfiguration())) {
+    ReplicationPeerConfig peerConfig = new ReplicationPeerConfig()
+          .setClusterKey(ZKUtil.getZooKeeperClusterKey(utility.getConfiguration()))
+          .setReplicationEndpointImpl(TestWrapperCustomReplicationEndpoint.class.getName());
+
+    Map<TableName, List<String>> tableCfs = new HashMap<>();
+    List<String> cfs = new ArrayList<>();
+    cfs.add(COLUMN_FAMILY);
+    tableCfs.put(TABLE_NAME, cfs);
+
+    replicationAdmin.addPeer(PEER_NAME, peerConfig, tableCfs);
+}
+```
+
 ## References
 * https://issues.apache.org/jira/browse/HBASE-11367
 * https://issues.apache.org/jira/browse/HBASE-11992
