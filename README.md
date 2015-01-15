@@ -5,9 +5,10 @@ HBase 0.98.9 added the ability to create custom replication endpoints. This is a
 ## Usage
 ### Cluster
 1. `mvn clean package`
-2. Copy jar to lib directory on each region server
-3. Restart region servers
-4. `java -cp $(hbase classpath):target/hbase-custom-replication-endpoint-example-1.0-SNAPSHOT.jar com.avalonconsult.hbase.utility.AddCustomReplicationEndpoint --peer-name customreplicationendpoint --class-name com.avalonconsult.hbase.CustomReplicationEndpoint`
+2. Add hbase.replication=true to hbase-site.xml
+3. Copy jar to lib directory on each region server
+4. Restart region servers
+5. `java -cp $(hbase classpath):target/hbase-custom-replication-endpoint-example-1.0-SNAPSHOT.jar com.avalonconsult.hbase.utility.AddCustomReplicationEndpoint --peer-name customreplicationendpoint --class-name com.avalonconsult.hbase.CustomReplicationEndpoint`
 
 Using the `hbase shell` enter the following commands:
 ```
