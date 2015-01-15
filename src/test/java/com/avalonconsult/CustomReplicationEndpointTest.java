@@ -80,20 +80,19 @@ public class CustomReplicationEndpointTest {
      * ReplicationAdmin? It looks like there is no way to specify a class with
      * add_peer from the `hbase shell` or with a HBase configuration property
      */
-    ReplicationAdmin replicationAdmin = new ReplicationAdmin(utility.getConfiguration());
+    try(ReplicationAdmin replicationAdmin = new ReplicationAdmin(utility.getConfiguration())) {
+      ReplicationPeerConfig peerConfig = new ReplicationPeerConfig()
+          .setClusterKey(ZKUtil.getZooKeeperClusterKey(utility.getConfiguration()))
+          .setReplicationEndpointImpl(TestWrapperCustomReplicationEndpoint.class.getName());
 
-    ReplicationPeerConfig peerConfig = new ReplicationPeerConfig()
-        .setClusterKey(ZKUtil.getZooKeeperClusterKey(utility.getConfiguration()))
-        .setReplicationEndpointImpl(TestWrapperCustomReplicationEndpoint.class.getName());
+      Map<TableName, List<String>> tableCfs = new HashMap<>();
+      List<String> cfs = new ArrayList<>();
+      cfs.add(COLUMN_FAMILY);
+      tableCfs.put(TABLE_NAME, cfs);
 
-    Map<TableName, List<String>> tableCfs = new HashMap<>();
-    List<String> cfs = new ArrayList<>();
-    cfs.add(COLUMN_FAMILY);
-    tableCfs.put(TABLE_NAME, cfs);
+      replicationAdmin.addPeer(PEER_NAME, peerConfig, tableCfs);
 
-    replicationAdmin.addPeer(PEER_NAME, peerConfig, tableCfs);
-
-    replicationAdmin.close();
+    }
   }
 
   /**
@@ -121,16 +120,16 @@ public class CustomReplicationEndpointTest {
    * @throws IOException
    */
   private void createTestTable() throws IOException {
-    HBaseAdmin hBaseAdmin = utility.getHBaseAdmin();
-    HTableDescriptor hTableDescriptor = new HTableDescriptor(TABLE_NAME);
-    HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(COLUMN_FAMILY);
+    try(HBaseAdmin hBaseAdmin = utility.getHBaseAdmin()) {
+      HTableDescriptor hTableDescriptor = new HTableDescriptor(TABLE_NAME);
+      HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(COLUMN_FAMILY);
 
-    // Ensure that replication is enabled for column family
-    hColumnDescriptor.setScope(HConstants.REPLICATION_SCOPE_GLOBAL);
+      // Ensure that replication is enabled for column family
+      hColumnDescriptor.setScope(HConstants.REPLICATION_SCOPE_GLOBAL);
 
-    hTableDescriptor.addFamily(hColumnDescriptor);
-    hBaseAdmin.createTable(hTableDescriptor);
-    hBaseAdmin.close();
+      hTableDescriptor.addFamily(hColumnDescriptor);
+      hBaseAdmin.createTable(hTableDescriptor);
+    }
 
     utility.waitUntilAllRegionsAssigned(TABLE_NAME);
   }
@@ -140,11 +139,11 @@ public class CustomReplicationEndpointTest {
    * @throws IOException
    */
   private void addData() throws IOException {
-    HTable hTable = new HTable(utility.getConfiguration(), TABLE_NAME);
-    Put put = new Put(ROWKEY_BYTES);
-    put.add(COLUMN_FAMILY_BYTES, QUANTIFIER_BYTES, VALUE_BYTES);
-    hTable.put(put);
-    hTable.close();
+    try(HTable hTable = new HTable(utility.getConfiguration(), TABLE_NAME)) {
+      Put put = new Put(ROWKEY_BYTES);
+      put.add(COLUMN_FAMILY_BYTES, QUANTIFIER_BYTES, VALUE_BYTES);
+      hTable.put(put);
+    }
   }
 
   /**
@@ -166,9 +165,10 @@ public class CustomReplicationEndpointTest {
    * @throws ReplicationException
    */
   private void removePeer() throws IOException, ReplicationException {
-    ReplicationAdmin replicationAdmin = new ReplicationAdmin(utility.getConfiguration());
-    replicationAdmin.removePeer(PEER_NAME);
-    replicationAdmin.close();
+    try(ReplicationAdmin replicationAdmin = new ReplicationAdmin(utility.getConfiguration())) {
+      replicationAdmin.removePeer(PEER_NAME);
+    }
+
   }
 
   /**
