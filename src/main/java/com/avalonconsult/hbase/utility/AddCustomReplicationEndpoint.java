@@ -49,6 +49,7 @@ public class AddCustomReplicationEndpoint {
     Option peerNameOption = OptionBuilder
         .withLongOpt("peer-name")
         .hasArg()
+        .withArgName("peer-name")
         .isRequired()
         .withDescription("HBase peer id")
         .create();
@@ -56,6 +57,7 @@ public class AddCustomReplicationEndpoint {
     Option classNameOption = OptionBuilder
         .withLongOpt("class-name")
         .hasArg()
+        .withArgName("class-name")
         .isRequired()
         .withDescription(
             "Class name for custom replication endpoint. The class must be " +
