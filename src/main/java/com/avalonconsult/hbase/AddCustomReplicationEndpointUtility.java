@@ -28,7 +28,12 @@ public class AddCustomReplicationEndpointUtility {
    * @throws org.apache.hadoop.hbase.replication.ReplicationException
    */
   @VisibleForTesting
-  static void addPeer(Configuration conf, String peerName, Class<? extends BaseReplicationEndpoint> clazz, Map<TableName, List<String>> tableCfs) throws IOException, ReplicationException {
+  static void addPeer(
+      Configuration conf,
+      String peerName,
+      Class<? extends BaseReplicationEndpoint> clazz,
+      Map<TableName, List<String>> tableCfs
+  ) throws IOException, ReplicationException {
     /*
      * TODO
      * Is there a way to add a custom endpoint replication without the
