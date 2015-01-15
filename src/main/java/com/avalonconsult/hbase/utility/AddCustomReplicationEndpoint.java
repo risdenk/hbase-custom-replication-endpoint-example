@@ -62,7 +62,8 @@ public class AddCustomReplicationEndpoint {
         "c",
         "--class-name",
         true,
-        "Class name for custom replication endpoint. Must extend BaseReplicationEndpoint"
+        "Class name for custom replication endpoint. The class must be on " +
+            "the classpath and must extend BaseReplicationEndpoint"
     );
 
     CommandLineParser parser = new BasicParser();
