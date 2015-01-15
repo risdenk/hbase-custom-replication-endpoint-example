@@ -81,12 +81,11 @@ public class AddCustomReplicationEndpoint {
       );
     }
 
-    // TODO handle passing tableCfs
     addPeer(
         conf,
         peerName,
         clazz.asSubclass(BaseReplicationEndpoint.class),
-        null
+        null // TODO handle passing tableCfs
     );
   }
 }
