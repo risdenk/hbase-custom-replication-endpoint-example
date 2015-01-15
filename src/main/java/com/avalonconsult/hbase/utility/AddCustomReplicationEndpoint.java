@@ -1,4 +1,4 @@
-package com.avalonconsult.hbase;
+package com.avalonconsult.hbase.utility;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.cli.BasicParser;
@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by risdenk on 1/14/15.
  */
-public class AddCustomReplicationEndpointUtility {
+public class AddCustomReplicationEndpoint {
   /**
    * Adds the peer
    *

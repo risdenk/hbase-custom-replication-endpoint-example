@@ -1,5 +1,6 @@
 package com.avalonconsult.hbase;
 
+import com.avalonconsult.hbase.utility.AddCustomReplicationEndpoint;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
@@ -77,7 +78,7 @@ public class CustomReplicationEndpointTest {
     cfs.add(COLUMN_FAMILY);
     tableCfs.put(TABLE_NAME, cfs);
 
-    AddCustomReplicationEndpointUtility.addPeer(utility.getConfiguration(), PEER_NAME, TestWrapperCustomReplicationEndpoint.class, tableCfs);
+    AddCustomReplicationEndpoint.addPeer(utility.getConfiguration(), PEER_NAME, TestWrapperCustomReplicationEndpoint.class, tableCfs);
   }
 
   /**
