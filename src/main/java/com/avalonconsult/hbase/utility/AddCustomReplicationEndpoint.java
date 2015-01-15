@@ -84,11 +84,18 @@ public class AddCustomReplicationEndpoint {
     String peerName = cmd.getOptionValue("p");
     String className = cmd.getOptionValue("c");
 
+    /*
+     * TODO handle tableCfs
+     * Can be handled with `hbase shell` command set_peer_tableCFs
+     * Defaulting to null which will be all column families
+     */
+    Map<TableName, List<String>> tableCfs = null;
+
     addPeer(
         conf,
         peerName,
         Class.forName(className).asSubclass(ReplicationEndpoint.class),
-        null // TODO handle passing tableCfs
+        tableCfs
     );
   }
 }
