@@ -1,6 +1,5 @@
 package com.avalonconsult.hbase.utility;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -28,8 +27,7 @@ public class AddCustomReplicationEndpoint {
    * @throws java.io.IOException
    * @throws org.apache.hadoop.hbase.replication.ReplicationException
    */
-  @VisibleForTesting
-  static void addPeer(
+  public static void addPeer(
       Configuration conf,
       String peerName,
       Class<? extends BaseReplicationEndpoint> clazz,
