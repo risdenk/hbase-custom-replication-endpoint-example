@@ -1,4 +1,6 @@
-package com.avalonconsult;
+package com.avalonconsult.hbase;
+
+import com.avalonconsult.hbase.CustomReplicationEndpoint;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;

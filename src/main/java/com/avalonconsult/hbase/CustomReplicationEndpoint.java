@@ -1,4 +1,4 @@
-package com.avalonconsult;
+package com.avalonconsult.hbase;
 
 import org.apache.hadoop.hbase.replication.BaseReplicationEndpoint;
 import org.slf4j.Logger;

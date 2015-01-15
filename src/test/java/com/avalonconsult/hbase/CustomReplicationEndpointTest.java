@@ -1,4 +1,4 @@
-package com.avalonconsult;
+package com.avalonconsult.hbase;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
@@ -7,9 +7,7 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.replication.ReplicationAdmin;
 import org.apache.hadoop.hbase.replication.ReplicationException;
-import org.apache.hadoop.hbase.replication.ReplicationPeerConfig;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.apache.hadoop.hbase.zookeeper.ZKUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,24 +72,12 @@ public class CustomReplicationEndpointTest {
    * @throws ReplicationException
    */
   private void addPeer() throws IOException, ReplicationException {
-    /*
-     * TODO
-     * Is there a way to add a custom endpoint replication without the
-     * ReplicationAdmin? It looks like there is no way to specify a class with
-     * add_peer from the `hbase shell` or with a HBase configuration property
-     */
-    try(ReplicationAdmin replicationAdmin = new ReplicationAdmin(utility.getConfiguration())) {
-      ReplicationPeerConfig peerConfig = new ReplicationPeerConfig()
-          .setClusterKey(ZKUtil.getZooKeeperClusterKey(utility.getConfiguration()))
-          .setReplicationEndpointImpl(TestWrapperCustomReplicationEndpoint.class.getName());
+    Map<TableName, List<String>> tableCfs = new HashMap<>();
+    List<String> cfs = new ArrayList<>();
+    cfs.add(COLUMN_FAMILY);
+    tableCfs.put(TABLE_NAME, cfs);
 
-      Map<TableName, List<String>> tableCfs = new HashMap<>();
-      List<String> cfs = new ArrayList<>();
-      cfs.add(COLUMN_FAMILY);
-      tableCfs.put(TABLE_NAME, cfs);
-
-      replicationAdmin.addPeer(PEER_NAME, peerConfig, tableCfs);
-    }
+    AddCustomReplicationEndpointUtility.addPeer(utility.getConfiguration(), PEER_NAME, TestWrapperCustomReplicationEndpoint.class, tableCfs);
   }
 
   /**
