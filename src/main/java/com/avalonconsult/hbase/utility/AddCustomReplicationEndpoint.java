@@ -28,7 +28,7 @@ public class AddCustomReplicationEndpoint {
       Configuration conf,
       String peerName,
       Class<? extends ReplicationEndpoint> clazz,
-      Map<TableName, List<String>> tableCfs
+      Map<TableName, List<String>> tableCFs
   ) throws IOException, ReplicationException {
     /*
      * TODO
@@ -41,7 +41,7 @@ public class AddCustomReplicationEndpoint {
           .setClusterKey(ZKUtil.getZooKeeperClusterKey(conf))
           .setReplicationEndpointImpl(clazz.getName());
 
-      replicationAdmin.addPeer(peerName, peerConfig, tableCfs);
+      replicationAdmin.addPeer(peerName, peerConfig, tableCFs);
     }
   }
 
@@ -85,17 +85,20 @@ public class AddCustomReplicationEndpoint {
     String className = cmd.getOptionValue("c");
 
     /*
-     * TODO handle tableCfs
+     * TODO handle tableCFs
      * Can be handled with `hbase shell` command set_peer_tableCFs
-     * Defaulting to null which will be all column families
+     * ReplicationAdmin should have a method signature
+     *    public void addPeer(String id, ReplicationPeerConfig peerConfig,
+     *        String tableCFs) throws ReplicationException
+     * Defaulting to null for all tables and all column families
      */
-    Map<TableName, List<String>> tableCfs = null;
+    Map<TableName, List<String>> tableCFs = null;
 
     addPeer(
         conf,
         peerName,
         Class.forName(className).asSubclass(ReplicationEndpoint.class),
-        tableCfs
+        tableCFs
     );
   }
 }
