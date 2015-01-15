@@ -103,7 +103,7 @@ public class CustomReplicationEndpointTest {
     Waiter.waitFor(utility.getConfiguration(), WAIT_TIMEOUT, new Waiter.Predicate<Exception>() {
       @Override
       public boolean evaluate() throws Exception {
-        return TestWrapperCustomReplicationEndpoint.contructedCount.get() == numRegionServers;
+        return TestWrapperCustomReplicationEndpoint.constructedCount.get() == numRegionServers;
       }
     });
 
@@ -187,7 +187,7 @@ public class CustomReplicationEndpointTest {
   @Test
   public void testCustomReplicationEndpoint() throws Exception {
     // Initialize counts to 0 before test
-    TestWrapperCustomReplicationEndpoint.contructedCount.set(0);
+    TestWrapperCustomReplicationEndpoint.constructedCount.set(0);
     TestWrapperCustomReplicationEndpoint.startedCount.set(0);
     TestWrapperCustomReplicationEndpoint.stoppedCount.set(0);
     TestWrapperCustomReplicationEndpoint.replicatedCount.set(0);
@@ -196,7 +196,7 @@ public class CustomReplicationEndpointTest {
 
     waitForCustomReplicationEndpointCreation();
 
-    assertEquals(numRegionServers, TestWrapperCustomReplicationEndpoint.contructedCount.get());
+    assertEquals(numRegionServers, TestWrapperCustomReplicationEndpoint.constructedCount.get());
     assertEquals(numRegionServers, TestWrapperCustomReplicationEndpoint.startedCount.get());
 
     createTestTable();

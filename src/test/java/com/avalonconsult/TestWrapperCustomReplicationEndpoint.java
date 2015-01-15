@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by risdenk on 1/14/15.
  */
 public class TestWrapperCustomReplicationEndpoint extends CustomReplicationEndpoint {
-  static final AtomicInteger contructedCount = new AtomicInteger();
+  static final AtomicInteger constructedCount = new AtomicInteger();
   static final AtomicInteger startedCount = new AtomicInteger();
   static final AtomicInteger stoppedCount = new AtomicInteger();
   static final AtomicInteger replicatedCount = new AtomicInteger();
@@ -15,7 +15,7 @@ public class TestWrapperCustomReplicationEndpoint extends CustomReplicationEndpo
   public TestWrapperCustomReplicationEndpoint() {
     super();
 
-    contructedCount.incrementAndGet();
+    constructedCount.incrementAndGet();
   }
 
   @Override
