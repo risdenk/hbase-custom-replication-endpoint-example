@@ -91,7 +91,6 @@ public class CustomReplicationEndpointTest {
       tableCfs.put(TABLE_NAME, cfs);
 
       replicationAdmin.addPeer(PEER_NAME, peerConfig, tableCfs);
-
     }
   }
 
