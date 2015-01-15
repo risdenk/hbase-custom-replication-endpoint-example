@@ -1,9 +1,9 @@
 package com.avalonconsult.hbase;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -24,6 +24,7 @@ import java.util.Map;
 public class AddCustomReplicationEndpointUtility {
   /**
    * Adds the peer
+   *
    * @throws java.io.IOException
    * @throws org.apache.hadoop.hbase.replication.ReplicationException
    */
@@ -51,10 +52,20 @@ public class AddCustomReplicationEndpointUtility {
 
   public static void main(String[] args) throws Exception {
     Options options = new Options();
-    options.addOption("p", "--peer-name", true, "");
-    options.addOption("c", "--class-name", true, "");
+    options.addOption(
+        "p",
+        "--peer-name",
+        true,
+        "HBase peer id"
+    );
+    options.addOption(
+        "c",
+        "--class-name",
+        true,
+        "Class name for custom replication endpoint. Must extend BaseReplicationEndpoint"
+    );
 
-    CommandLineParser parser = new GnuParser();
+    CommandLineParser parser = new BasicParser();
     CommandLine cmd = parser.parse(options, args);
 
     Configuration conf = HBaseConfiguration.create();
@@ -63,7 +74,7 @@ public class AddCustomReplicationEndpointUtility {
     String className = cmd.getOptionValue("c");
 
     Class<?> clazz = Class.forName(className);
-    if(clazz.isInstance(BaseReplicationEndpoint.class)) {
+    if (clazz.isInstance(BaseReplicationEndpoint.class)) {
       addPeer(conf, peerName, clazz.asSubclass(BaseReplicationEndpoint.class), null);
     }
   }
