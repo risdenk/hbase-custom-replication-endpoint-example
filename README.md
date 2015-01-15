@@ -40,6 +40,31 @@ try(ReplicationAdmin replicationAdmin = new ReplicationAdmin(utility.getConfigur
 }
 ```
 
+## Notes
+* addPeer methods that are deprecated are currently used by `hbase shell`
+* Why is there a tableCFs map? Why not stick with the string?
+* This method currently calls `getTableCfsStr(tableCfs)` to convert the tableCfs map to a string.
+```java
+public void addPeer(String id, ReplicationPeerConfig peerConfig, Map<TableName, ? extends Collection<String>> tableCfs) throws ReplicationException
+```
+* ReplicationAdmin should have a method signature:
+```java
+public void addPeer(String id, ReplicationPeerConfig peerConfig, String tableCFs) throws ReplicationException
+```
+* There could be a ReplicationAdmin method like the following:
+```java
+public void addPeer(String id, String clusterKey, String replicationEndpointClassname, String tableCFs) throws ReplicationException {
+  this.replicationPeers.addPeer(
+    id,
+    new ReplicationPeerConfig()
+      .setClusterKey(clusterKey)
+      .setReplicationEndpointImpl(replicationEndpointClassname),
+    tableCFs
+  );
+}
+```
+* This would enable an easy modification of HBase shell add_peer command to support adding a Custom Replication Endpoint peer.
+
 ## References
 * https://issues.apache.org/jira/browse/HBASE-11367
 * https://issues.apache.org/jira/browse/HBASE-11992
