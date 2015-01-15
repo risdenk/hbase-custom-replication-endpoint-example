@@ -1,9 +1,6 @@
 package com.avalonconsult.hbase.utility;
 
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -49,23 +46,36 @@ public class AddCustomReplicationEndpoint {
   }
 
   public static void main(String[] args) throws Exception {
+    Option peerNameOption = OptionBuilder
+        .withLongOpt("peer-name")
+        .hasArg()
+        .isRequired()
+        .withDescription("HBase peer id")
+        .create();
+
+    Option classNameOption = OptionBuilder
+        .withLongOpt("class-name")
+        .hasArg()
+        .isRequired()
+        .withDescription(
+            "Class name for custom replication endpoint. The class must be " +
+                "on the classpath and must extend BaseReplicationEndpoint")
+        .create();
+
     Options options = new Options();
-    options.addOption(
-        "p",
-        "--peer-name",
-        true,
-        "HBase peer id"
-    );
-    options.addOption(
-        "c",
-        "--class-name",
-        true,
-        "Class name for custom replication endpoint. The class must be on " +
-            "the classpath and must extend BaseReplicationEndpoint"
-    );
+    options.addOption(peerNameOption);
+    options.addOption(classNameOption);
 
     CommandLineParser parser = new BasicParser();
-    CommandLine cmd = parser.parse(options, args);
+    CommandLine cmd;
+    try {
+      cmd = parser.parse(options, args);
+    } catch (ParseException e) {
+      HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp("AddCustomReplicationEndpoint", options);
+      System.exit(1);
+      return;
+    }
 
     Configuration conf = HBaseConfiguration.create();
 
